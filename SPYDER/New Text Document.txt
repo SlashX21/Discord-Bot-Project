@@ -1,0 +1,6 @@
+@bot.command()
+async def magic8(ctx, arg1):
+    response = ['You can do it', 'maybe you should find a better way', 'trust the people around you', 'forget about it', 'you deserve better', 'you just suck', 'believe in yourself', 'Work for it']
+    words = random.choice(response)
+    embed1 = discord.Embed(title=words, color=0xf1c40f)
+    await ctx.send(embed=embed1)
