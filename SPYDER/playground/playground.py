@@ -10,6 +10,7 @@ import time
 from random import randint
 import math
 from cryptography.fernet import Fernet
+from newsapi import NewsApiClient
 
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 bot.remove_command('help')
@@ -86,13 +87,13 @@ async def quadratic(ctx):
     solution_2 = float(((-b) - math.sqrt((b ** 2.0) - (4.0 * a * c)))/(2.0*a))
     await ctx.send('The solution for {} x^2 + {} x + {} is x = {} and x = {}'.format(a, b, c, "%.3f" % solution_1, "%.3f" % solution_2))
 
-@bot.command()
-async def settimer(ctx, day, hour, mins):
-    global time_left
-    seconds_in_day = (int(day)*86400)
-    seconds_in_hour = (int(hour)*3600)
-    seconds_in_min = (int(mins)*60)
-    time_left = (time_in_day+time_in_hour+time_in_min)
+# @bot.command()
+# async def settimer(ctx, day, hour, mins):
+#     global time_left
+#     seconds_in_day = (int(day)*86400)
+#     seconds_in_hour = (int(hour)*3600)
+#     seconds_in_min = (int(mins)*60)
+#     time_left = (time_in_day+time_in_hour+time_in_min)
 
 
 
@@ -114,25 +115,25 @@ async def decrypt(ctx):
     plain_text = fernet.decrypt(cipher_text)
     await ctx.send(plain_text)
 
-@bot.command()
-async def runtimer(ctx):
-    global time_left
-    embed1 = discord.Embed(title="Timer Starts!")
-    await ctx.send(embed=embed1)
-    while time_left>0:
-        time_left -= 1
-        await asyncio.sleep(1)
-    else:
-        embed2 = discord.Embed(title="Time's UP!!!")
-        await ctx.send(embed=embed2)
+# @bot.command()
+# async def runtimer(ctx):
+#     global time_left
+#     embed1 = discord.Embed(title="Timer Starts!")
+#     await ctx.send(embed=embed1)
+#     while time_left>0:
+#         time_left -= 1
+#         await asyncio.sleep(1)
+#     else:
+#         embed2 = discord.Embed(title="Time's UP!!!")
+#         await ctx.send(embed=embed2)
 
 
-@bot.command()
-async def timeleft(ctx):
-    global time_left
-    Time_to_show = (str(datetime.timedelta(seconds = time_left)))
-    embed = discord.Embed(title=f'time left : {Time_to_show}')
-    await ctx.send(embed=embed)
+# @bot.command()
+# async def timeleft(ctx):
+#     global time_left
+#     Time_to_show = (str(datetime.timedelta(seconds = time_left)))
+#     embed = discord.Embed(title=f'time left : {Time_to_show}')
+#     await ctx.send(embed=embed)
 
 
 @bot.command()
@@ -163,6 +164,21 @@ async def help1(ctx):
     await ctx.send(embed=embed)
 #</test>
 
+@bot.command()
+async def news(ctx, *, keyword):
+    news_request = requests.get(f'https://newsapi.org/v2/everything?q={keyword}&pageSize=5&apiKey=f48caecd17044caab83abd99edc58135').json()
+    newslist = news_request['articles']
+    titles = []
+    descriptions = []
+    urls = []
+    for info in newslist:
+        titles.append(info['title']) 
+        descriptions.append(info['description'])
+        urls.append(info['url'])
+    for i in range(5):
+        embed = discord.Embed(title=titles[i], description = descriptions[i], url = urls[i])
+        # await ctx.send(f"```{titles[i]}\n\n{descriptions[i]}\n\n```{urls[i]}")
+        await ctx.send(embed=embed)
 
 #3nB6qJgepDm3vuNb6YjQMw==
-bot.run('NzA3NTgwMTcwODczMDc3Nzkx.XteCRg.oKx6YLSefWq3PlBghi1b0SUqJlk')
+bot.run('NzA3NTgwMTcwODczMDc3Nzkx.XrK3Yg.JVujLWfgRkBe2cv0wAqs43NtiX4')
